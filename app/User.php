@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+use App\Models\Videometraje;
+use App\Models\Comentario;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'name',
@@ -27,5 +30,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(Videometraje::class, 'likes', 'id_user', 'id_video');
+    }
+
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class, 'id_user');    
     }
 }

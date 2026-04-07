@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Videometraje extends Model
 {
-    use HasFactory;
-
     protected $table = 'videometraje';
 
     protected $fillable = [
@@ -27,5 +25,20 @@ class Videometraje extends Model
         return $h > 0
             ? sprintf('%d:%02d:%02d', $h, $m, $s)
             : sprintf('%02d:%02d', $m, $s);
+    }
+
+    public function pelicula()
+    {
+        return $this->hasOne(PeliVideo::class, 'id_video');
+    }
+
+    public function capitulo()
+    {
+        return $this->hasOne(SerieVideo::class, 'id_video');
+    }
+
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class, 'id_video');
     }
 }

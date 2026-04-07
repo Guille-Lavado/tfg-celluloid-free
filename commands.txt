@@ -1,0 +1,30 @@
+----- Crear Proyecto -----
+sudo docker compose build
+sudo docker compose up -d
+sudo docker compose exec app composer global require laravel/installer
+sudo docker compose exec app composer require laravel/ui:^2.0
+sudo docker compose exec app composer require laravel/sanctum
+
+----- Migración para Añadir Rol a Users -----
+sudo docker compose exec app php artisan make:migration alter_table_user
+
+----- Migraciones -----
+sudo docker compose exec app php artisan make:migration create_likes_table
+sudo docker compose exec app php artisan make:migration create_favorito_obra_table
+sudo docker compose exec app php artisan make:migration create_favorito_director_table
+
+----- Modelos y Migraciones -----
+sudo docker compose exec app php artisan make:model Director -m
+sudo docker compose exec app php artisan make:model Genero -m
+sudo docker compose exec app php artisan make:model Videometraje -m
+sudo docker compose exec app php artisan make:model Obra -m
+sudo docker compose exec app php artisan make:model PeliVideo -m
+sudo docker compose exec app php artisan make:model SerieVideo -m
+sudo docker compose exec app php artisan make:model Comentario -m
+
+    ----- Ejecutar Migraciones -----
+    sudo docker compose exec app php artisan migrate
+    sudo docker compose exec app php artisan migrate:fresh --seed
+
+-- Acceso a DB --
+sudo docker compose exec db mysql -u celluloid_free_user -p
