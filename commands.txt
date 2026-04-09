@@ -26,5 +26,8 @@ sudo docker compose exec app php artisan make:model Comentario -m
     sudo docker compose exec app php artisan migrate
     sudo docker compose exec app php artisan migrate:fresh --seed
 
+-- Controladores --
+sudo docker compose exec app php artisan make:controller DirectorController --resource
+
 -- Acceso a DB --
 sudo docker compose exec db mysql -u celluloid_free_user -p

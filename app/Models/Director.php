@@ -11,14 +11,15 @@ class Director extends Model
 
     protected $fillable = [
         'nombre',
-        'fecha_de_nacimiento',
+        'fecha_nacimiento',
         'biografia',
+        'img'
     ];
 
     protected function casts(): array
     {
         return [
-            'fecha_de_nacimiento' => 'date',
+            'fecha_nacimiento' => 'date',
         ];
     }
 }

@@ -32,13 +32,15 @@ class DatabaseSeeder extends Seeder
 
         $kubrick = Director::create([
             'nombre'              => 'Stanley Kubrick',
-            'fecha_de_nacimiento' => '1928-07-26',
+            'fecha_nacimiento' => '1928-07-26',
             'biografia'           => 'Director y productor estadounidense, considerado uno de los más influyentes de la historia del cine.',
+            'img'                 => 'https://storage.celluloid.com/directores/kubrick-perfil.jpg'
         ]);
 
         $odisea = Obra::create([
             'titulo'      => '2001: A Space Odyssey',
             'sinopsis'    => 'Tras el descubrimiento de un misterioso monolito enterrado bajo la superficie lunar, un viaje a Júpiter degenera cuando la IA del barco empieza a mostrar comportamiento hostil.',
+            'poster'      => 'https://storage.celluloid.com/obras/a-space-odyssey.png',
             'id_genero'   => $cienciaFi->id,
             'id_director' => $kubrick->id,
         ]);

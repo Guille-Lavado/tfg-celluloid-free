@@ -12,6 +12,7 @@ class Obra extends Model
     protected $fillable = [
         'titulo',
         'sinopsis',
+        'poster',
         'id_genero',
         'id_director',
     ];
