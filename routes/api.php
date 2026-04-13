@@ -17,9 +17,20 @@ use App\Http\Controllers\Api\ObraController;
 |
 */
 
-Route::get('/directores', [DirectorController::class, 'index']);
-Route::get('/generos',    [GeneroController::class, 'index']);
+// --- Directores --- 
+Route::get('/directores',      [DirectorController::class, 'index']);
+Route::get('/directores/{id}', [DirectorController::class, 'show']);
+
+// --- Generos --- 
+Route::get('/generos',         [GeneroController::class, 'index']);
+Route::post('/generos',        [GeneroController::class, 'store']);
+Route::put('/generos/{id}',    [GeneroController::class, 'update']);
+Route::delete('/generos/{id}', [GeneroController::class, 'destroy']);
+
+// --- Obras --- 
 Route::get('/obras',      [ObraController::class, 'index']);   // ?nombre=&genero=&director=
+Route::get('/obras/{id}', [ObraController::class, 'show']);
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

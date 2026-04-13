@@ -9,9 +9,7 @@ use App\Models\Genero;
 class GeneroController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Obtener todos los Géneros
      */
     public function index()
     {
@@ -29,68 +27,56 @@ class GeneroController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Crear nuevo Género.
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'nombre' => 'required|string|max:50|unique:genero,nombre',
+        ]);
+ 
+        $genero = Genero::create($data);
+ 
+        return response()->json([
+            'message' => 'Género creado correctamente',
+            'data' => $genero
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Actualizar Género
      */
     public function update(Request $request, $id)
     {
-        //
+        $genero = Genero::findOrFail($id);
+ 
+        $data = $request->validate([
+            'nombre' => 'required|string|max:50|unique:genero,nombre,' . $id,
+        ]);
+ 
+        $genero->update($data);
+ 
+        return response()->json([
+            'message' => 'Género actualizado correctamente',
+            'data' => $genero
+        ], 200);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Eliminar Género
      */
     public function destroy($id)
     {
-        //
+        $genero = Genero::findOrFail($id);
+ 
+        try {
+            $genero->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'message' => 'No se puede eliminar el género porque tiene obras asociadas.'
+            ], 500);
+        }
+ 
+        return response()->json(['message' => 'Género eliminado correctamente']);
     }
 }

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // convertie automáticamente los valores de la base de datos
     protected function casts(): array
     {
         return [

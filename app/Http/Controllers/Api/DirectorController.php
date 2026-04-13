@@ -9,9 +9,7 @@ use App\Models\Director;
 class DirectorController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Obtener todos los Directores
      */
     public function index()
     {
@@ -33,8 +31,6 @@ class DirectorController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -43,9 +39,6 @@ class DirectorController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -53,14 +46,13 @@ class DirectorController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Obtener Director por Id
      */
     public function show($id)
     {
-        //
+        $director = Director::findOrFail($id);
+ 
+        return response()->json($director, 200);
     }
 
     /**
