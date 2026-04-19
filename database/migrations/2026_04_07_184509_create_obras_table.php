@@ -17,7 +17,7 @@ class CreateObrasTable extends Migration
             $table->id();
             $table->string('titulo', 255);
             $table->text('sinopsis')->nullable();
-            $table->string('poster', 2048);
+            $table->string('poster', 255);
             $table->foreignId('id_genero')->constrained('genero')->restrictOnDelete();
             $table->foreignId('id_director')->constrained('director')->restrictOnDelete();
             $table->timestamps();

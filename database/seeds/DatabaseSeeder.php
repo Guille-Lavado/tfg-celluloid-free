@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'name'     => 'Guille',
             'email'    => 'guille@example.com',
             'password' => Hash::make('password'),
-            'rol'      => 'usuario',
+            'rol'      => 'administrador',
         ]);
 
         $cienciaFi = Genero::create(['nombre' => 'Ciencia Ficción']);
@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             'nombre'              => 'Stanley Kubrick',
             'fecha_nacimiento' => '1928-07-26',
             'biografia'           => 'Director y productor estadounidense, considerado uno de los más influyentes de la historia del cine.',
-            'img'                 => 'https://storage.celluloid.com/directores/kubrick-perfil.jpg'
+            'img'                 => 'https://storage.celluloid.com/directores/kubrick.jpg'
         ]);
 
         $odisea = Obra::create([

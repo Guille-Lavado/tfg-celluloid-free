@@ -74,7 +74,7 @@ class GeneroController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'message' => 'No se puede eliminar el género porque tiene obras asociadas.'
-            ], 500);
+            ], 409);
         }
  
         return response()->json(['message' => 'Género eliminado correctamente']);

@@ -18,7 +18,7 @@ class CreateDirectorsTable extends Migration
             $table->string('nombre', 100);
             $table->date('fecha_nacimiento')->nullable();
             $table->text('biografia')->nullable();
-            $table->string('img', 2048);
+            $table->string('img', 255);
             $table->timestamps();
         });
     }

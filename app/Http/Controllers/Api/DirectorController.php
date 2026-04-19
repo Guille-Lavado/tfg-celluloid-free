@@ -38,6 +38,7 @@ class DirectorController extends Controller
             'nombre'              => 'required|string|max:100',
             'fecha_de_nacimiento' => 'nullable|date',
             'biografia'           => 'nullable|string',
+            'img'                 => 'sometimes|nullable|string|url',
         ]);
  
         $director = Director::create($data);
@@ -69,6 +70,7 @@ class DirectorController extends Controller
             'nombre'              => 'sometimes|string|max:100',
             'fecha_de_nacimiento' => 'sometimes|nullable|date',
             'biografia'           => 'sometimes|nullable|string',
+            'img'                 => 'sometimes|nullable|string|url',
         ]);
  
         $director->update($data);
@@ -91,7 +93,7 @@ class DirectorController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'message' => 'No se puede eliminar el director porque tiene obras asociadas'
-            ], 500);
+            ], 409);
         }
  
         return response()->json(['message' => 'Director eliminado correctamente'], 200);

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Obra;
+use App\Models\Videometraje;
+use App\Models\PeliVideo;
+use App\Models\SerieVideo;
 
 class ObraController extends Controller
 {
@@ -35,9 +39,9 @@ class ObraController extends Controller
         foreach($obras as $obra) {
             $res_obra[] = [
                 'id' => $obra['id'],
-                'nombre' => $obra['titulo'],
-                'fecha de nacimiento' => $obra['sinopsis'],
-                'biografia' => $obra['poster'],
+                'titulo' => $obra['titulo'],
+                'sinopsis' => $obra['sinopsis'],
+                'poster' => $obra['poster'],
                 'genero' => $obra['genero']['nombre'],
                 'director' => $obra['director']['nombre'],
             ];
@@ -47,19 +51,69 @@ class ObraController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Crear una nueva Obra y Videometraje con relación de PeliVideo o SerieVideo
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'titulo'                   => 'required|string|max:255',
+            'sinopsis'                 => 'nullable|string',
+            'poster'                   => 'nullable|string|url',
+            'id_genero'                => 'nullable|exists:genero,id',
+            'id_director'              => 'required|exists:director,id',
+            'tipo'                     => 'required|in:pelicula,serie',
+            // Película
+            'url_video'                => 'required_if:tipo,pelicula|nullable|string|url',
+            'duracion'                 => 'required_if:tipo,pelicula|nullable|integer|min:1',
+            'nombre_video'             => 'nullable|string|max:255',
+            // Serie
+            'capitulos'                => 'required_if:tipo,serie|nullable|array|min:1',
+            'capitulos.*.url_video'    => 'required|string|url',
+            'capitulos.*.duracion'     => 'required|integer|min:1',
+            'capitulos.*.nombre'       => 'nullable|string|max:255',
+            'capitulos.*.temporada'    => 'required|integer|min:1',
+            'capitulos.*.episodio'     => 'required|integer|min:1',
+        ]);
+ 
+        $obra = DB::transaction(function () use ($data) {
+            $obra = Obra::create([
+                'titulo'      => $data['titulo'],
+                'sinopsis'    => $data['sinopsis'] ?? null,
+                'poster'      => $data['poster'],
+                'id_genero'   => $data['id_genero'],
+                'id_director' => $data['id_director'],
+            ]);
+ 
+            if ($data['tipo'] === 'pelicula') {
+                $video = Videometraje::create([
+                    'url_video' => $data['url_video'],
+                    'duracion'  => $data['duracion'],
+                    'nombre'    => $data['nombre_video'] ?? null,
+                ]);
+                PeliVideo::create(['id_video' => $video->id, 'id_obra' => $obra->id]);
+            } else {
+                foreach ($data['capitulos'] as $cap) {
+                    $video = Videometraje::create([
+                        'url_video' => $cap['url_video'],
+                        'duracion'  => $cap['duracion'],
+                        'nombre'    => $cap['nombre'] ?? null,
+                    ]);
+                    SerieVideo::create([
+                        'id_video'  => $video->id,
+                        'id_obra'   => $obra->id,
+                        'temporada' => $cap['temporada'],
+                        'episodio'  => $cap['episodio'],
+                    ]);
+                }
+            }
+ 
+            return $obra;
+        });
+ 
+        return response()->json([
+            'message' => 'Obra creada correctamente',
+            'data' => $obra->load(['genero', 'director', 'peliVideo.videometraje', 'capitulosVideo.videometraje'])
+        ], 201);
     }
 
     /**
@@ -74,26 +128,36 @@ class ObraController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualizar una Obra
      */
     public function update(Request $request, $id)
     {
-        //
+        $obra = Obra::findOrFail($id);
+ 
+        $data = $request->validate([
+            'titulo'      => 'sometimes|string|max:255',
+            'sinopsis'    => 'sometimes|nullable|string',
+            'poster'      => 'sometimes|nullable|string|url',
+            'id_genero'   => 'sometimes|exists:genero,id',
+            'id_director' => 'sometimes|exists:director,id',
+        ]);
+ 
+        $obra->update($data);
+ 
+        return response()->json([
+            'message' => 'Obra actualizada correctamente',
+            'data' => $obra->load(['genero', 'director'])
+        ], 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar una Obra
      */
     public function destroy($id)
     {
-        //
+        $obra = Obra::findOrFail($id);
+        $obra->delete();
+ 
+        return response()->json(['message' => 'Obra eliminada correctamente'], 200);
     }
 }

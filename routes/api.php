@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\GeneroController;
 use App\Http\Controllers\Api\ObraController;
 use App\Http\Controllers\Api\PuntuacionController;
 use App\Http\Controllers\Api\ComentarioController;
+use App\Http\Controllers\Api\FavoritoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,25 +20,23 @@ use App\Http\Controllers\Api\ComentarioController;
 |
 */
 
+// --- RUTAS PUBLICAS ---
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // --- Generos --- 
-Route::get('/generos',         [GeneroController::class, 'index']);
-Route::post('/generos',        [GeneroController::class, 'store']);
-Route::put('/generos/{id}',    [GeneroController::class, 'update']);
-Route::delete('/generos/{id}', [GeneroController::class, 'destroy']);
+Route::get('/generos', [GeneroController::class, 'index']);
 
 // --- Obras --- 
 Route::get('/obras',      [ObraController::class, 'index']);   // ?nombre=&genero=&director=
 Route::get('/obras/{id}', [ObraController::class, 'show']);
 
+// --- Directores --- 
+Route::get('/directores',      [DirectorController::class, 'index']);
+Route::get('/directores/{id}', [DirectorController::class, 'show']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-
-    // --- Directores --- 
-    Route::get('/directores',      [DirectorController::class, 'index']);
-    Route::get('/directores/{id}', [DirectorController::class, 'show']);
 
     // --- Puntuaciones ---
     Route::get('/puntuaciones/{id}',    [PuntuacionController::class, 'show']);
@@ -54,4 +53,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favoritos/obras/{id}',      [FavoritoController::class, 'toggleObra']);
     Route::get('/favoritos/directores',       [FavoritoController::class, 'directores']);
     Route::post('/favoritos/directores/{id}', [FavoritoController::class, 'toggleDirector']);
+
+    Route::middleware('role:administrador')->group(function () {
+        // --- Generos --- 
+        Route::post('/generos',        [GeneroController::class, 'store']);
+        Route::put('/generos/{id}',    [GeneroController::class, 'update']);
+        Route::delete('/generos/{id}', [GeneroController::class, 'destroy']);
+
+        // --- Obras ---
+        Route::post('/obras',        [ObraController::class, 'store']);
+        Route::put('/obras/{id}',    [ObraController::class, 'update']);
+        Route::delete('/obras/{id}', [ObraController::class, 'destroy']);
+
+        // --- Directores ---
+        Route::post('/directores',        [DirectorController::class, 'store']);
+        Route::put('/directores/{id}',    [DirectorController::class, 'update']);
+        Route::delete('/directores/{id}', [DirectorController::class, 'destroy']);
+    });
 });
