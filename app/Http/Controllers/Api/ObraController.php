@@ -47,7 +47,9 @@ class ObraController extends Controller
             ];
         }
 
-        return response()->json($res_obra, 200);
+        return response()->json([
+            'data' => $res_obra
+        ], 200);
     }
 
     /**
@@ -124,7 +126,9 @@ class ObraController extends Controller
         $obra = Obra::with(['genero', 'director', 'peliVideo.videometraje', 'capitulosVideo.videometraje'])
             ->findOrFail($id);
  
-        return response()->json($obra, 200);
+        return response()->json([
+            'data' => $obra
+        ], 200);
     }
 
     /**

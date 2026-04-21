@@ -30,6 +30,13 @@ class DatabaseSeeder extends Seeder
 
         $cienciaFi = Genero::create(['nombre' => 'Ciencia Ficción']);
 
+        $nolan = Director::create([
+            'nombre'              => 'Christopher Nolan',
+            'fecha_nacimiento' => '1970-07-30',
+            'biografia'           => 'Director británico-estadounidense conocido por sus narraciones no lineales.',
+            'img'                 => 'https://storage.celluloid.com/directores/nolan.jpg',
+        ]);
+
         $kubrick = Director::create([
             'nombre'              => 'Stanley Kubrick',
             'fecha_nacimiento' => '1928-07-26',
@@ -43,6 +50,14 @@ class DatabaseSeeder extends Seeder
             'poster'      => 'https://storage.celluloid.com/obras/a-space-odyssey.png',
             'id_genero'   => $cienciaFi->id,
             'id_director' => $kubrick->id,
+        ]);
+
+        $inception = Obra::create([
+            'titulo'      => 'Inception',
+            'sinopsis'    => 'Un ladrón que roba secretos corporativos mediante el uso de la tecnología de compartir sueños recibe la tarea inversa de plantar una idea en la mente de un CEO.',
+            'poster'      => 'https://storage.celluloid.com/posters/inception.jpg',
+            'id_genero'   => $cienciaFi->id,
+            'id_director' => $nolan->id,
         ]);
 
         $videoOdisea = Videometraje::create([
