@@ -1,92 +1,36 @@
-import axios from "axios"
-import React, { useState, useEffect } from "react";
-import { Table, Container, Image, Alert } from 'react-bootstrap';
-
-const TablaObras = ({ obras }) => {
-  return (
-    <>
-      <h2 className="mb-4">Catálogo de Obras</h2>
-      <Table striped bordered hover responsive variant="dark">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Póster</th>
-            <th>Título</th>
-            <th>Género</th>
-            <th>Director</th>
-            <th>Sinopsis</th>
-            <th>Tipo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {obras.map((obra) => (
-            <tr key={obra.id}>
-              <td>{obra.id}</td>
-              <td>
-                <Image 
-                  src={obra.poster} 
-                  alt={obra.titulo} 
-                  style={{ width: '60px', height: '90px', objectFit: 'cover' }} 
-                  rounded 
-                />
-              </td>
-              <td className="fw-bold">{obra.titulo}</td>
-              <td>{obra.genero}</td>
-              <td>{obra.director}</td>
-              <td style={{ fontSize: '0.9rem', maxWidth: '300px' }}>
-                {obra.sinopsis}
-              </td>
-              <td>
-                <span className={`badge ${obra.peli_video ? "pelicula" : "serie"}`}>
-                  {obra.peli_video ? "Película" : "Serie"}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </>
-  );
-};
-
-const api = axios.create({
-  baseURL: "http://localhost:8000",
-  withCredentials: true,
-  withXSRFToken: true,
-});
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import AdminObras from "./pages/AdminObras";
+import LoginModal from "./components/LoginModal"
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const [obras, setObras] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError]   = useState(null);
+    const [showLogin, setShowLogin] = useState(true);
+    const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const getData = async () => {
-        try {
-          const res = await api.get("/api/obras");
-          setObras(res.data.data)
-          console.log(res.data.data);
-        } catch (error) {
-          setError("No se pudieron cargar las obras.");
-          console.log(error);
-        } finally {
-          setLoading(false);
-        }
+    if (!user) {
+        return (
+            <LoginModal
+                show={showLogin}
+                onHide={() => setShowLogin(false)}
+                onLogin={(u) => setUser(u)}
+            />
+        );
     };
 
-    getData();
-  }, []);
+    return (
+        <BrowserRouter>
+            <Routes>
+                {/* Redirige / al panel de admin */}
+                <Route path="/" element={<Navigate to="/admin/obras" replace />} />
 
-  return (
-    <Container className="container mt-4">
-      { loading 
-        ? <Alert variant="dark">Cargando obras...</Alert> 
-        : error 
-          ? <Alert variant="danger">{error}</Alert> 
-          : <TablaObras obras={obras}/> 
-      }
-    </Container>
-  );
-}
+                {/* Panel admin con layout compartido */}
+                <Route path="/admin">
+                    <Route path="obras" element={<AdminObras />} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
+};
 
 export default App;

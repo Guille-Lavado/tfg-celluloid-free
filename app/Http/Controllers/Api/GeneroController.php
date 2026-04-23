@@ -37,10 +37,7 @@ class GeneroController extends Controller
  
         $genero = Genero::create($data);
  
-        return response()->json([
-            'message' => 'Género creado correctamente',
-            'data' => $genero
-        ], 201);
+        return response()->json($genero, 201);
     }
 
     /**
@@ -56,10 +53,7 @@ class GeneroController extends Controller
  
         $genero->update($data);
  
-        return response()->json([
-            'message' => 'Género actualizado correctamente',
-            'data' => $genero
-        ], 200);
+        return response()->json($genero, 200);
     }
 
     /**

@@ -42,14 +42,18 @@ class ObraController extends Controller
                 'titulo' => $obra['titulo'],
                 'sinopsis' => $obra['sinopsis'],
                 'poster' => $obra['poster'],
-                'genero' => $obra['genero']['nombre'],
-                'director' => $obra['director']['nombre'],
+                'genero' => [
+                    'nombre' => $obra['genero']['nombre']
+                ],
+                'director' => [
+                    'nombre' => $obra['director']['nombre'],
+                    'fecha_nacimiento' => $obra['director']['fecha_nacimiento'],
+                    'biografia' => $obra['director']['biografia'],
+                ],
             ];
         }
 
-        return response()->json([
-            'data' => $res_obra
-        ], 200);
+        return response()->json($res_obra, 200);
     }
 
     /**
@@ -112,10 +116,7 @@ class ObraController extends Controller
             return $obra;
         });
  
-        return response()->json([
-            'message' => 'Obra creada correctamente',
-            'data' => $obra->load(['genero', 'director', 'peliVideo.videometraje', 'capitulosVideo.videometraje'])
-        ], 201);
+        return response()->json($obra->load(['genero', 'director', 'peliVideo.videometraje', 'capitulosVideo.videometraje']), 201);
     }
 
     /**
@@ -126,9 +127,7 @@ class ObraController extends Controller
         $obra = Obra::with(['genero', 'director', 'peliVideo.videometraje', 'capitulosVideo.videometraje'])
             ->findOrFail($id);
  
-        return response()->json([
-            'data' => $obra
-        ], 200);
+        return response()->json($obra, 200);
     }
 
     /**

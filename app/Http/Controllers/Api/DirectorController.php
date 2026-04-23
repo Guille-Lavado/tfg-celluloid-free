@@ -43,10 +43,7 @@ class DirectorController extends Controller
  
         $director = Director::create($data);
  
-        return response()->json([
-            'message' => 'Director creado correctamente',
-            'data' => $director
-        ], 201);
+        return response()->json($director, 201);
     }
 
     /**
@@ -75,10 +72,7 @@ class DirectorController extends Controller
  
         $director->update($data);
  
-        return response()->json([
-            'message' => 'Director actualizado correctamente',
-            'data' => $director
-        ], 200);
+        return response()->json($director, 200);
     }
 
     /**
