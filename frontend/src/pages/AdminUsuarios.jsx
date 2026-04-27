@@ -4,7 +4,6 @@ import api from "../api/axios";
 
 export default function AdminUsuarios() {
 	const [usuarios, setUsuarios] = useState([]);
-	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [showModal, setShowModal] = useState(false);
 	const [editando, setEditando] = useState(null);
@@ -21,8 +20,6 @@ export default function AdminUsuarios() {
 			setUsuarios(res.data);
 		} catch {
 			setError("Error al cargar los usuarios.");
-		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -82,8 +79,6 @@ export default function AdminUsuarios() {
 			setError("Error al eliminar el usuario.");
 		}
 	};
-
-	if (loading) return <Spinner animation="border" />;
 
 	return (
 		<>

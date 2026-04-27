@@ -4,14 +4,15 @@ import api from "../api/axios";
 
 export default function AdminObras() {
   const [obras, setObras] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [editando, setEditando] = useState(null); // null = crear, objeto = editar
   const [form, setForm] = useState({ titulo: "", sinopsis: "", poster: "", id_genero: "", id_director: "" });
   const [generos, setGeneros] = useState([]);
   const [directores, setDirectores] = useState([]);
   const [guardando, setGuardando] = useState(false);
+
+  // null = crear, objeto = editar
+  const [editando, setEditando] = useState(null);
 
   useEffect(() => {
     fetchObras();
@@ -23,10 +24,9 @@ export default function AdminObras() {
     try {
       const res = await api.get("/api/obras");
       setObras(res.data);
+      console.log(res.data);
     } catch {
       setError("Error al cargar las obras.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -96,8 +96,6 @@ export default function AdminObras() {
     }
   };
 
-  if (loading) return <Spinner animation="border" />;
-
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -127,7 +125,7 @@ export default function AdminObras() {
               <td>{obra.director?.nombre ?? "—"}</td>
               <td>
                 <Badge bg={obra.peli_video ? "primary" : "secondary"}>
-                  {obra.peli_video ? "Película" : "Serie"}
+                  {obra.peli_video ? "Película" : obra.serie_video ? "Serie" : "-"}
                 </Badge>
               </td>
               <td className="d-flex gap-2">

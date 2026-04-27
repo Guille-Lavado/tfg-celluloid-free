@@ -50,6 +50,8 @@ class ObraController extends Controller
                     'fecha_nacimiento' => $obra['director']['fecha_nacimiento'],
                     'biografia' => $obra['director']['biografia'],
                 ],
+                'peli_video' => $obra->peliVideo !== null,
+                'serie_video' => $obra->capitulosVideo()->exists(),
             ];
         }
 

@@ -20,7 +20,7 @@ class DirectorController extends Controller
             $res_director[] = [
                 'id' => $director['id'],
                 'nombre' => $director['nombre'],
-                'fecha de nacimiento' => $director['fecha_nacimiento'],
+                'fecha_de_nacimiento' => $director['fecha_nacimiento'],
                 'biografia' => $director['biografia'],
                 'imagen' => $director['img'],
             ];

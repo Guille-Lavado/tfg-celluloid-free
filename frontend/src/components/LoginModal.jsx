@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Modal, Form, Button, Alert, Spinner } from "react-bootstrap";
 import api from "../api/axios";
 
-export default function LoginModal({ show, onHide, onLogin }) {
-    const [form, setForm]       = useState({ email: "", password: "" });
-    const [error, setError]     = useState(null);
+export default function LoginModal({ show, onLogin }) {
+    const [form, setForm] = useState({ email: "", password: "" });
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -17,19 +17,24 @@ export default function LoginModal({ show, onHide, onLogin }) {
         setError(null);
         try {
             await api.get("/sanctum/csrf-cookie");
-            console.log("✅ CSRF cookie obtenida")
+            console.log("✅ CSRF cookie obtenida");
 
-            const res = await api.post("/api/login", form);
-            console.log("✅ Login correcto")
+            const res = await api.post("/api/login", {
+                "email": "guille@example.com",
+                "password": "password"
+            });
+            console.log("✅ Login correcto");
 
-            const { access_token, user } = res.data
-            console.log("✅ Usuario:", user)
+            const { access_token, user } = res.data;
+            console.log("✅ Usuario:", user);
 
             // Guarda el token en axios para todas las peticiones siguientes
-            api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`
+            api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+
+            // Guarda el token en localStorage
+            localStorage.setItem("token", access_token);
 
             onLogin(user);
-            onHide();
         } catch (err) {
             setError("Email o contraseña incorrectos.");
         } finally {
@@ -38,7 +43,7 @@ export default function LoginModal({ show, onHide, onLogin }) {
     };
 
     return (
-        <Modal show={show} onHide={onHide} centered>
+        <Modal show={show} centered>
             <Modal.Header closeButton>
                 <Modal.Title>Iniciar sesión</Modal.Title>
             </Modal.Header>
@@ -67,7 +72,6 @@ export default function LoginModal({ show, onHide, onLogin }) {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onHide}>Cancelar</Button>
                     <Button variant="primary" type="submit" disabled={loading}>
                         {loading ? <Spinner size="sm" animation="border" /> : "Entrar"}
                     </Button>

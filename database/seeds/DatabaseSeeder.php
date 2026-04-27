@@ -66,9 +66,20 @@ class DatabaseSeeder extends Seeder
             'nombre'    => '2001: A Space Odyssey (1968)',
         ]);
 
+        $videoInception = Videometraje::create([
+            'url_video' => 'https://storage.celluloid.com/videos/inception.mp4',
+            'duracion'  => 8880, // 2h 28min
+            'nombre'    => 'Inception (2010)',
+        ]);
+
         PeliVideo::create([
             'id_video' => $videoOdisea->id,
             'id_obra'  => $odisea->id,
+        ]);
+
+        PeliVideo::create([
+            'id_video' => $videoInception->id,
+            'id_obra'  => $inception->id,
         ]);
 
         Comentario::create([
