@@ -5,7 +5,7 @@ services:
         user: sammy
         uid: 1000
       context: ./
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./Dockerfile
     image: app-back
     container_name: app-back
     restart: unless-stopped
@@ -14,6 +14,7 @@ services:
     working_dir: /var/www/
     volumes:
       - ./backend:/var/www
+      - ./.env:/var/www/.env
     networks:
       - app-network
 

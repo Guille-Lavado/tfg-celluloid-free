@@ -5,6 +5,15 @@ sudo docker compose exec app composer global require laravel/installer laravel/s
 sudo docker compose exec app composer install
 -- no usado -- sudo docker compose exec app composer require laravel/ui:^2.0
 
+----- Backblaze B2 -----
+sudo docker compose exec app composer require league/flysystem-aws-s3-v3 "^3.0"
+
+----- Version -----
+sudo docker compose exec app php artisan --version
+
+----- Rutas -----
+sudo docker compose exec app php artisan route:list
+
 ----- Migración para Añadir Rol a Users -----
 sudo docker compose exec app php artisan make:migration alter_table_user
 
